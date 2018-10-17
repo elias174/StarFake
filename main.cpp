@@ -1,19 +1,31 @@
 #define GLUT_DISABLE_ATEXIT_HACK
 #include <math.h>
 #include <iostream>
+#include <vector>
 
+#include "asteroids.h"
+#include "collision.h"
 
 #include <GL/glut.h>
 #include "starship.h"
 #include "texturemanager.h"
+#include "utils.h"
 
+#define WIDTH_SCREEN 800
+#define HEIGHT_SCREEN 600
+#define N_ASTEROIDS 10
 #define KEY_ESC 27
 #define KEY_SPACEBAR 32
 
 using namespace std;
 
 
+int limit_x = 24;
+int limit_y = 10;
+
+
 Starship *starship  = NULL;
+vector<Asteroid> asteroids;
 GLint sprites;
 GLint texture;
 int time_dev = 0;
@@ -41,11 +53,19 @@ void glPaint(void) {
     }
 
     if (i == 6) i = 0;
-
-    glBindTexture(GL_TEXTURE_2D, sprites);
+    int index_asteroid=0;
+    for(Asteroid &asteroid : asteroids){
+        if(asteroid.destroyed){
+            asteroids.erase(asteroids.begin()+index_asteroid);
+            continue;
+        }
+        asteroid.first_y -= 0.01f;
+        asteroid.display();
+        index_asteroid++;
+    }
     starship->display();
     starship->draw_bullets();
-
+    collision_asteroid_bullet(asteroids, starship->bullets);
     glutSwapBuffers();
 
 }
@@ -120,16 +140,20 @@ GLvoid callback_special(int key, int x, int y)
     }
 }
 int main(int argc, char** argv) {
-
     //Inicializacion de la GLUT
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-    glutInitWindowSize(800, 600); //tamaño de la ventana
+    glutInitWindowSize(WIDTH_SCREEN, HEIGHT_SCREEN); //tamaño de la ventana
     glutInitWindowPosition(100, 100); //posicion de la ventana
     glutCreateWindow("Textura: Animacion"); //titulo de la ventana
 
     init_GL(); //fucnion de inicializacion de OpenGL
-
+    for(int i=0; i<N_ASTEROIDS; i++){
+        int limit_w = get_random_number(-limit_x, limit_x);
+        float limit_h = limit_y;
+        Asteroid a_t(limit_w, limit_h);
+        asteroids.push_back(a_t);
+    }
     starship = new Starship();
 
     glutDisplayFunc(glPaint);

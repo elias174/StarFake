@@ -11,7 +11,10 @@ HEADERS += \
     texturemanager.h \
     starship.h \
     bullet.h \
-    coordpoint.h
+    coordpoint.h \
+    asteroids.h \
+    utils.h \
+    collision.h
 
 LIBS += -lGL -lGLU -lglut -lfreeimage
 

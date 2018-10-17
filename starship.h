@@ -13,10 +13,6 @@
 
 using namespace std;
 
-
-
-
-
 class Starship
 {
 public:
@@ -76,6 +72,9 @@ public:
             this->points[i].x += x;
             this->points[i].y += y;
         }
+//        cout << this->points[0].x << endl;
+//        cout << this->points[0].y << endl;
+
     }
 
     void shoot_bullet(){
@@ -98,7 +97,7 @@ public:
         glBindTexture(GL_TEXTURE_2D, sprites);
         glInterleavedArrays(GL_T2F_V3F, sizeof(CoordPoint), &this->points[0].s);
         glDrawElements(GL_QUADS, this->list_index.size() , GL_UNSIGNED_INT, (void*)this->pointer_list_index);
-        glDisable(GL_COLOR_MATERIAL);
+        //glDisable(GL_COLOR_MATERIAL);
         glDisable(GL_BLEND);
     }
 };
