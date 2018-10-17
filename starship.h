@@ -10,6 +10,7 @@
 #include "texturemanager.h"
 #include "coordpoint.h"
 #include "bullet.h"
+#include "utils.h"
 
 using namespace std;
 
@@ -20,6 +21,10 @@ public:
     vector<GLuint> list_index;
     vector<Bullet> bullets;
     GLint sprites;
+    GLfloat height;
+    GLfloat width;
+    GLfloat first_x, first_y;
+
 
     GLuint *pointer_list_index;
     int n_vertex;
@@ -27,6 +32,10 @@ public:
     Starship() {
         n_vertex = 4;
         sprites = TextureManager::Inst()->LoadTexture("clipart3.png", GL_BGRA_EXT, GL_RGBA);
+        height = 5;
+        width = 4;
+        first_x = -3;
+        first_y = -5;
         this->create_list_vertex();
         this->create_list_index();
     }
@@ -36,27 +45,26 @@ public:
         double y = 0.99;
 
         this->points = new CoordPoint[n_vertex];
-        this->points[0].x = -3;
-        this->points[0].y = -5;
+        this->points[0].x = first_x;
+        this->points[0].y = first_y;
         this->points[0].z = 0;
         this->points[0].s = 0;
         this->points[0].t = y;
 
-
-        this->points[1].x = -3;
-        this->points[1].y = 0;
+        this->points[1].x = first_x;
+        this->points[1].y = first_y + height;
         this->points[1].z = 0;
         this->points[1].s = x;
         this->points[1].t = 2.0f;
 
-        this->points[2].x = 1;
-        this->points[2].y = 0;
+        this->points[2].x = first_x+width;
+        this->points[2].y = first_y+height;
         this->points[2].z = 0;
         this->points[2].s = x+1.0f;
         this->points[2].t = 2.0f;
 
-        this->points[3].x = 1;
-        this->points[3].y = -5;
+        this->points[3].x = first_x+width;
+        this->points[3].y = first_y;
         this->points[3].z = 0;
         this->points[3].s = x+1.0f;
         this->points[3].t = y;
@@ -68,6 +76,8 @@ public:
     }
 
     void set_move(GLfloat x=0, GLfloat y=0){
+        first_x += x;
+        first_y += y;
         for(int i=0; i<n_vertex; i++){
             this->points[i].x += x;
             this->points[i].y += y;
@@ -90,7 +100,17 @@ public:
             bullets[i].first_y += 0.3f;
             bullets[i].display();
         }
+    }
 
+    coords get_center_collide(){
+        GLfloat center_collide_x = (first_x + (first_x+width))/2.0f;
+        GLfloat center_collide_y = (first_y + (first_y+height))/2.0f;
+        coords my_center = make_pair(center_collide_x, center_collide_y);
+        return  my_center;
+    }
+
+    GLfloat get_radio(){
+       return height/2.0f;
     }
 
     void display(){

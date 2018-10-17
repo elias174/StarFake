@@ -7,10 +7,11 @@
 #include "asteroids.h"
 #include "bullet.h"
 #include "utils.h"
+#include "starship.h"
 
 using namespace std;
 
-void collision_asteroid_bullet(vector<Asteroid> &asteroids, vector<Bullet> &bullets){
+void collision_asteroid_bullet(vector<Asteroid> &asteroids, vector<Bullet> &bullets, Starship *starship, bool &game_over){
     int index_bullet = 0;
     for(Asteroid &asteroid : asteroids){
         bool collided = false;
@@ -24,6 +25,12 @@ void collision_asteroid_bullet(vector<Asteroid> &asteroids, vector<Bullet> &bull
                 break;
             }
             index_bullet++;
+        }
+        coords center_starship = starship->get_center_collide();
+        GLfloat radio_starship = starship->get_radio();
+        if(asteroid.detect_collision(center_starship, radio_starship)){
+            cout << "collidsaa" << endl;
+            game_over = true;
         }
     }
 }

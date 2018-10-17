@@ -23,6 +23,7 @@ using namespace std;
 int limit_x = 24;
 int limit_y = 10;
 
+bool game_over = false;
 
 Starship *starship  = NULL;
 vector<Asteroid> asteroids;
@@ -39,6 +40,7 @@ void glPaint(void) {
 
     //El fondo de la escena al color initial
     glClear(GL_COLOR_BUFFER_BIT);
+    if(game_over) exit(0);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);//funcion de transparencia
     glEnable(GL_BLEND);//utilizar transparencia
     time_dev = glutGet(GLUT_ELAPSED_TIME); // recupera el tiempo ,que paso desde el incio de programa
@@ -59,15 +61,14 @@ void glPaint(void) {
             asteroids.erase(asteroids.begin()+index_asteroid);
             continue;
         }
-        asteroid.first_y -= 0.01f;
+        asteroid.first_y -= 0.0f;
         asteroid.display();
         index_asteroid++;
     }
     starship->display();
     starship->draw_bullets();
-    collision_asteroid_bullet(asteroids, starship->bullets);
+    collision_asteroid_bullet(asteroids, starship->bullets, starship, game_over);
     glutSwapBuffers();
-
 }
 
 //

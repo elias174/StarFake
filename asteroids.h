@@ -21,6 +21,7 @@ public:
     GLfloat trail_length;
     GLint sprites;
     bool destroyed;
+    bool to_deleted;
 
     Asteroid(GLfloat first_x, GLfloat first_y) {
         sprites = TextureManager::Inst()->LoadTexture("animated_asteroid.png", GL_BGRA_EXT, GL_RGBA);
@@ -30,6 +31,7 @@ public:
         heigth = 3.0f;
         this->width = 2.2f;
         destroyed = false;
+        to_deleted = false;
     }
 
     void display(){
